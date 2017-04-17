@@ -12,7 +12,8 @@ public class MacroClusteringStatisticsDao extends BaseDao {
     public void saveStatistics(MacroClusteringStatistics statistics) {
         Connection connection = getConnection();
         PreparedStatement preparedStatement = null;
-        String insertTweet = "INSERT INTO statistics (timestamp, clusterId, numberOfDocuments, absorbedClusters, timeFactor) VALUES (?,?,?,?,?)";
+        String insertTweet = "INSERT INTO statistics (timestamp, clusterId, numberOfDocuments," +
+                " absorbedClusters, timeFactor, totalProcessedPerTimeUnit) VALUES (?,?,?,?,?,?)";
         if (connection != null) {
             try {
                 preparedStatement = connection.prepareStatement(insertTweet, Statement.RETURN_GENERATED_KEYS);
@@ -21,6 +22,7 @@ public class MacroClusteringStatisticsDao extends BaseDao {
                 preparedStatement.setInt(3, statistics.getNumberOfDocuments());
                 preparedStatement.setString(4, statistics.getAbsorbedClusterIds().toString());
                 preparedStatement.setInt(5, statistics.getTimeFactor());
+                preparedStatement.setInt(6, statistics.getTotalProcessedPerTimeUnit());
 
                 int affectedRows = preparedStatement.executeUpdate();
                 if (affectedRows == 0)

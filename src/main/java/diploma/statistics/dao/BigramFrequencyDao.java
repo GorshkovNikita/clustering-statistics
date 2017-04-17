@@ -1,30 +1,28 @@
 package diploma.statistics.dao;
 
-import twitter4j.Status;
-
-import java.sql.*;
-import java.util.Date;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 /**
  * @author Никита
  */
-public class TweetDao extends BaseDao {
-    public void saveTweet(Status status) {
+public class BigramFrequencyDao extends BaseDao {
+    public void saveBigramFrequency(String bigram, int frequency) throws Exception {
         Connection connection = getConnection();
         PreparedStatement preparedStatement = null;
-        String insertTweet = "INSERT INTO tweets (tweetId, tweetText, creationTime) VALUES (?,?,?)";
+        String insertBigramFrequency = "INSERT INTO bigramFrequencies (bigram, frequency) VALUES (?,?)";
         if (connection != null) {
             try {
-                preparedStatement = connection.prepareStatement(insertTweet, Statement.RETURN_GENERATED_KEYS);
-                preparedStatement = connection.prepareStatement(insertTweet);
-                preparedStatement.setString(1, String.valueOf(status.getId()));
-                preparedStatement.setString(2, status.getText());
-                preparedStatement.setTimestamp(3, new Timestamp(new Date().getTime()));
+                preparedStatement = connection.prepareStatement(insertBigramFrequency);
+                preparedStatement.setString(1, bigram);
+                preparedStatement.setInt(2, frequency);
                 preparedStatement.executeUpdate();
                 preparedStatement.close();
                 connection.close();
             } catch (Exception e) {
-                e.printStackTrace();
+//                e.printStackTrace();
+                throw e;
             } finally {
                 try {
                     if (preparedStatement != null)
@@ -35,21 +33,22 @@ public class TweetDao extends BaseDao {
                     connection.close();
                 }
                 catch (SQLException se) {
-                    se.printStackTrace();
+//                    se.printStackTrace();
+                    throw se;
                 }
             }
         }
     }
 
-    public void updateTweetClusteredTime(Status status) {
+    public void updateBigramFrequency(String bigram, int frequency) {
         Connection connection = getConnection();
         PreparedStatement preparedStatement = null;
-        String insertTweet = "UPDATE tweets SET clusteredTime = ? WHERE tweetId = ?";
+        String updateBigramFrequency = "UPDATE bigramFrequencies SET frequency = ? where bigram = ?";
         if (connection != null) {
             try {
-                preparedStatement = connection.prepareStatement(insertTweet);
-                preparedStatement.setTimestamp(1, new Timestamp(new Date().getTime()));
-                preparedStatement.setString(2, String.valueOf(status.getId()));
+                preparedStatement = connection.prepareStatement(updateBigramFrequency);
+                preparedStatement.setInt(1, frequency);
+                preparedStatement.setString(2, bigram);
                 preparedStatement.executeUpdate();
                 preparedStatement.close();
                 connection.close();

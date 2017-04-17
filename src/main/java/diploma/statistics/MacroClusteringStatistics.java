@@ -15,6 +15,7 @@ public class MacroClusteringStatistics implements Serializable {
     private Map<String, Integer> topTerms;
     private int numberOfDocuments;
     private List<Integer> absorbedClusterIds;
+    private int totalProcessedPerTimeUnit;
 
     public Timestamp getTimestamp() {
         return timestamp;
@@ -62,5 +63,13 @@ public class MacroClusteringStatistics implements Serializable {
 
     public void setAbsorbedClusterIds(List<Integer> absorbedClusterIds) {
         this.absorbedClusterIds = absorbedClusterIds;
+    }
+
+    public int getTotalProcessedPerTimeUnit() {
+        return totalProcessedPerTimeUnit;
+    }
+
+    public void setTotalProcessedPerTimeUnit(int totalProcessedPerTimeUnit) {
+        this.totalProcessedPerTimeUnit = totalProcessedPerTimeUnit;
     }
 }
