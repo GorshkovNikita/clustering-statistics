@@ -13,7 +13,7 @@ public class MacroClusteringStatisticsDao extends BaseDao {
         Connection connection = getConnection();
         PreparedStatement preparedStatement = null;
         String insertTweet = "INSERT INTO statistics (timestamp, clusterId, numberOfDocuments," +
-                " absorbedClusters, timeFactor, totalProcessedPerTimeUnit, mostRelevantTweetId) VALUES (?,?,?,?,?,?,?)";
+                " absorbedClusters, timeFactor, totalProcessedPerTimeUnit, mostRelevantTweetId, totalProcessedTweets) VALUES (?,?,?,?,?,?,?,?)";
         if (connection != null) {
             try {
                 preparedStatement = connection.prepareStatement(insertTweet, Statement.RETURN_GENERATED_KEYS);
@@ -24,6 +24,7 @@ public class MacroClusteringStatisticsDao extends BaseDao {
                 preparedStatement.setInt(5, statistics.getTimeFactor());
                 preparedStatement.setInt(6, statistics.getTotalProcessedPerTimeUnit());
                 preparedStatement.setString(7, statistics.getMostRelevantTweetId());
+                preparedStatement.setInt(8, statistics.getTotalProcessedTweets());
 
                 int affectedRows = preparedStatement.executeUpdate();
                 if (affectedRows == 0)
@@ -97,7 +98,7 @@ public class MacroClusteringStatisticsDao extends BaseDao {
         Statement stmt = null;
         try {
             stmt =  connection.createStatement();
-            String query = "SELECT clusterId, numberOfDocuments, timestamp, totalProcessedPerTimeUnit, mostRelevantTweetId FROM statistics ";
+            String query = "SELECT clusterId, numberOfDocuments, timestamp, totalProcessedPerTimeUnit, mostRelevantTweetId, totalProcessedTweets FROM statistics ";
             ResultSet resultSet = stmt.executeQuery(query);
             while (resultSet.next()) {
                 MacroClusteringStatistics macroClusteringStatistics = new MacroClusteringStatistics();
@@ -106,6 +107,7 @@ public class MacroClusteringStatisticsDao extends BaseDao {
                 macroClusteringStatistics.setTimestamp(resultSet.getTimestamp(3));
                 macroClusteringStatistics.setTotalProcessedPerTimeUnit(resultSet.getInt(4));
                 macroClusteringStatistics.setMostRelevantTweetId(resultSet.getString(5));
+                macroClusteringStatistics.setTotalProcessedTweets(resultSet.getInt(6));
                 if (macroClusteringStatisticsMap.containsKey(macroClusteringStatistics.getClusterId()))
                     macroClusteringStatisticsMap.get(macroClusteringStatistics.getClusterId()).add(macroClusteringStatistics);
                 else macroClusteringStatisticsMap.put(macroClusteringStatistics.getClusterId(), new ArrayList<>(Arrays.asList(macroClusteringStatistics)));

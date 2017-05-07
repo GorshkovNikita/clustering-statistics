@@ -17,6 +17,7 @@ public class MacroClusteringStatistics implements Serializable {
     private List<Integer> absorbedClusterIds;
     private int totalProcessedPerTimeUnit;
     private String mostRelevantTweetId;
+    private int totalProcessedTweets;
 
     public Timestamp getTimestamp() {
         return timestamp;
@@ -80,5 +81,13 @@ public class MacroClusteringStatistics implements Serializable {
 
     public void setMostRelevantTweetId(String mostRelevantTweetId) {
         this.mostRelevantTweetId = mostRelevantTweetId;
+    }
+
+    public int getTotalProcessedTweets() {
+        return totalProcessedTweets;
+    }
+
+    public void setTotalProcessedTweets(int totalProcessedTweets) {
+        this.totalProcessedTweets = totalProcessedTweets;
     }
 }
