@@ -16,13 +16,14 @@ public class RemovedMicroClusterDao extends BaseDao {
         if (connection != null) {
             PreparedStatement preparedStatement = null;
             try {
-                String insertRemovedStatistics = "INSERT INTO removedmicroclusters (isPotential, topWords, numberOfDocuments, creationTime, lastUpdateTime) VALUES (?,?,?,?,?)";
+                String insertRemovedStatistics = "INSERT INTO removedmicroclusters (clusterId, isPotential, topWords, numberOfDocuments, creationTime, lastUpdateTime) VALUES (?,?,?,?,?)";
                 preparedStatement = connection.prepareStatement(insertRemovedStatistics);
-                preparedStatement.setByte(1, statistics.getIsPotential());
-                preparedStatement.setString(2, statistics.getTopWords());
-                preparedStatement.setInt(3, statistics.getNumberOfDocuments());
-                preparedStatement.setTimestamp(4, new Timestamp(statistics.getCreationTime()));
-                preparedStatement.setTimestamp(5, new Timestamp(statistics.getLastUpdateTime()));
+                preparedStatement.setInt(1, statistics.getClusterId());
+                preparedStatement.setByte(2, statistics.getIsPotential());
+                preparedStatement.setString(3, statistics.getTopWords());
+                preparedStatement.setInt(4, statistics.getNumberOfDocuments());
+                preparedStatement.setTimestamp(5, new Timestamp(statistics.getCreationTime()));
+                preparedStatement.setTimestamp(6, new Timestamp(statistics.getLastUpdateTime()));
                 preparedStatement.executeUpdate();
                 preparedStatement.close();
                 connection.close();

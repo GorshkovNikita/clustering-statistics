@@ -1,7 +1,9 @@
 package diploma.statistics.dao;
 
+import diploma.statistics.GeneralStatistics;
 import diploma.statistics.MacroClusteringStatistics;
 import diploma.statistics.TimeAndProcessedPerUnit;
+import javafx.util.Pair;
 
 import java.sql.*;
 import java.util.*;
@@ -247,5 +249,43 @@ public class MacroClusteringStatisticsDao extends BaseDao {
             }
         }
         return timeAndProcessedPerUnitList;
+    }
+
+    public GeneralStatistics getGeneralStatistics() {
+        Connection connection = getConnection();
+        GeneralStatistics generalStatistics = new GeneralStatistics();
+        Statement stmt = null;
+        try {
+            stmt = connection.createStatement();
+            String query = "SELECT timestamp, totalProcessedTweets FROM statistics ORDER BY timeFactor DESC";
+            ResultSet resultSet = stmt.executeQuery(query);
+            resultSet.next();
+            generalStatistics.setEndTime(resultSet.getTimestamp(1));
+            generalStatistics.setNumberOfTweets(resultSet.getInt(2));
+            query = "SELECT timestamp FROM statistics WHERE clusterId = 0";
+            ResultSet resultSet2 = stmt.executeQuery(query);
+            resultSet2.next();
+            generalStatistics.setStartTime(resultSet2.getTimestamp(1));
+            generalStatistics.setDuration(generalStatistics.getEndTime().getTime() - generalStatistics.getStartTime().getTime());
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        finally {
+            try {
+                if (stmt != null)
+                    stmt.close();
+            }
+            catch (SQLException se) {
+                se.printStackTrace();
+            }
+            try {
+                connection.close();
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return generalStatistics;
     }
 }

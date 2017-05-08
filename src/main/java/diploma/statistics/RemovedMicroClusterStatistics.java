@@ -4,11 +4,20 @@ package diploma.statistics;
  * @author Никита
  */
 public class RemovedMicroClusterStatistics {
+    private int clusterId;
     private byte isPotential;
     private int numberOfDocuments;
     private long creationTime;
     private long lastUpdateTIme;
     private String topWords;
+
+    public int getClusterId() {
+        return clusterId;
+    }
+
+    public void setClusterId(int clusterId) {
+        this.clusterId = clusterId;
+    }
 
     public byte getIsPotential() {
         return isPotential;
