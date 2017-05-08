@@ -1,6 +1,7 @@
 package diploma.statistics.dao;
 
 import diploma.statistics.MacroClusteringStatistics;
+import diploma.statistics.TimeAndProcessedPerUnit;
 
 import java.sql.*;
 import java.util.*;
@@ -61,7 +62,7 @@ public class MacroClusteringStatisticsDao extends BaseDao {
         if (connection != null) {
             PreparedStatement preparedStatement = null;
             try {
-                String insertTopTerm = "INSERT INTO topterms (statisticId, term, numberOfOccurences) VALUES (?,?,?)";
+                String insertTopTerm = "INSERT INTO topterms (statisticId, term, numberOfOccurrences) VALUES (?,?,?)";
                 preparedStatement = connection.prepareStatement(insertTopTerm);
 
                 for (Map.Entry<String, Integer> term: topTerms.entrySet()) {
@@ -92,25 +93,27 @@ public class MacroClusteringStatisticsDao extends BaseDao {
         }
     }
 
-    public Map<Integer, List<MacroClusteringStatistics>> getMacroClusteringStatistics() {
+    public Map<Integer, MacroClusteringStatistics> getMacroClusteringStatistics() {
         Connection connection = getConnection();
-        Map<Integer, List<MacroClusteringStatistics>> macroClusteringStatisticsMap = new HashMap<>();
+        Map<Integer, MacroClusteringStatistics> macroClusteringStatisticsMap = new HashMap<>();
         Statement stmt = null;
         try {
             stmt =  connection.createStatement();
-            String query = "SELECT clusterId, numberOfDocuments, timestamp, totalProcessedPerTimeUnit, mostRelevantTweetId, totalProcessedTweets FROM statistics ";
+            String query = "SELECT id, clusterId, numberOfDocuments, timestamp, totalProcessedPerTimeUnit, mostRelevantTweetId, totalProcessedTweets " +
+                    "FROM statistics ORDER BY timeFactor DESC";
             ResultSet resultSet = stmt.executeQuery(query);
             while (resultSet.next()) {
                 MacroClusteringStatistics macroClusteringStatistics = new MacroClusteringStatistics();
-                macroClusteringStatistics.setClusterId(resultSet.getInt(1));
-                macroClusteringStatistics.setNumberOfDocuments(resultSet.getInt(2));
-                macroClusteringStatistics.setTimestamp(resultSet.getTimestamp(3));
-                macroClusteringStatistics.setTotalProcessedPerTimeUnit(resultSet.getInt(4));
-                macroClusteringStatistics.setMostRelevantTweetId(resultSet.getString(5));
-                macroClusteringStatistics.setTotalProcessedTweets(resultSet.getInt(6));
-                if (macroClusteringStatisticsMap.containsKey(macroClusteringStatistics.getClusterId()))
-                    macroClusteringStatisticsMap.get(macroClusteringStatistics.getClusterId()).add(macroClusteringStatistics);
-                else macroClusteringStatisticsMap.put(macroClusteringStatistics.getClusterId(), new ArrayList<>(Arrays.asList(macroClusteringStatistics)));
+//                macroClusteringStatistics.setTopTerms(getTopTerms(resultSet.getInt(1)));
+                macroClusteringStatistics.setId(resultSet.getInt(1));
+                macroClusteringStatistics.setClusterId(resultSet.getInt(2));
+                macroClusteringStatistics.setNumberOfDocuments(resultSet.getInt(3));
+                macroClusteringStatistics.setTimestamp(resultSet.getTimestamp(4));
+                macroClusteringStatistics.setTotalProcessedPerTimeUnit(resultSet.getInt(5));
+                macroClusteringStatistics.setMostRelevantTweetId(resultSet.getString(6));
+                macroClusteringStatistics.setTotalProcessedTweets(resultSet.getInt(7));
+                if (!macroClusteringStatisticsMap.containsKey(macroClusteringStatistics.getClusterId()))
+                    macroClusteringStatisticsMap.put(macroClusteringStatistics.getClusterId(), macroClusteringStatistics);
             }
         }
         catch (Exception ex) {
@@ -134,9 +137,115 @@ public class MacroClusteringStatisticsDao extends BaseDao {
         return macroClusteringStatisticsMap;
     }
 
-    public static void main(String[] args) {
-        MacroClusteringStatisticsDao dao = new MacroClusteringStatisticsDao();
-        Map<Integer, List<MacroClusteringStatistics>> list = dao.getMacroClusteringStatistics();
-        System.out.println(list);
+    public MacroClusteringStatistics getMacroClusteringStatistics(int id) {
+        Connection connection = getConnection();
+        MacroClusteringStatistics macroClusteringStatistics = new MacroClusteringStatistics();
+        PreparedStatement stmt = null;
+        try {
+            String query = "SELECT id, clusterId, numberOfDocuments, timestamp, totalProcessedPerTimeUnit, mostRelevantTweetId, totalProcessedTweets FROM statistics WHERE id = ?";
+            stmt = connection.prepareStatement(query);
+            stmt.setInt(1, id);
+            ResultSet resultSet = stmt.executeQuery();
+            while (resultSet.next()) {
+                macroClusteringStatistics.setId(resultSet.getInt(1));
+                macroClusteringStatistics.setClusterId(resultSet.getInt(2));
+                macroClusteringStatistics.setNumberOfDocuments(resultSet.getInt(3));
+                macroClusteringStatistics.setTimestamp(resultSet.getTimestamp(4));
+                macroClusteringStatistics.setTotalProcessedPerTimeUnit(resultSet.getInt(5));
+                macroClusteringStatistics.setMostRelevantTweetId(resultSet.getString(6));
+                macroClusteringStatistics.setTotalProcessedTweets(resultSet.getInt(7));
+            }
+            macroClusteringStatistics.setTopTerms(getTopTerms(id));
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        finally {
+            try {
+                if (stmt != null)
+                    stmt.close();
+            }
+            catch (SQLException se) {
+                se.printStackTrace();
+            }
+            try {
+                connection.close();
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return macroClusteringStatistics;
+    }
+
+
+    public Map<String, Integer> getTopTerms(int statisticId) {
+        Connection connection = getConnection();
+        Map<String, Integer> topTerms = new HashMap<>();
+        PreparedStatement stmt = null;
+        try {
+            String query = "SELECT term, numberOfOccurrences FROM topTerms where statisticId = ?";
+            stmt =  connection.prepareStatement(query);
+            stmt.setInt(1, statisticId);
+            ResultSet resultSet = stmt.executeQuery();
+            while (resultSet.next())
+                topTerms.put(resultSet.getString(1), resultSet.getInt(2));
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        finally {
+            try {
+                if (stmt != null)
+                    stmt.close();
+            }
+            catch (SQLException se) {
+                se.printStackTrace();
+            }
+            try {
+                connection.close();
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return topTerms;
+    }
+
+    public List<TimeAndProcessedPerUnit> getTimeAndProcessedPerUnitList(int clusterId) {
+        Connection connection = getConnection();
+        List<TimeAndProcessedPerUnit> timeAndProcessedPerUnitList = new ArrayList<>();
+        PreparedStatement stmt = null;
+        try {
+            String query = "SELECT timestamp, totalProcessedPerTimeUnit FROM statistics where clusterId = ?";
+            stmt = connection.prepareStatement(query);
+            stmt.setInt(1, clusterId);
+            ResultSet resultSet = stmt.executeQuery();
+            while (resultSet.next()) {
+                TimeAndProcessedPerUnit timeAndProcessedPerUnit = new TimeAndProcessedPerUnit();
+                timeAndProcessedPerUnit.setTimestamp(resultSet.getTimestamp(1));
+                timeAndProcessedPerUnit.setTotalProcessedPerTimeUnit(resultSet.getInt(2));
+                timeAndProcessedPerUnitList.add(timeAndProcessedPerUnit);
+            }
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        finally {
+            try {
+                if (stmt != null)
+                    stmt.close();
+            }
+            catch (SQLException se) {
+                se.printStackTrace();
+            }
+            try {
+                connection.close();
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return timeAndProcessedPerUnitList;
     }
 }

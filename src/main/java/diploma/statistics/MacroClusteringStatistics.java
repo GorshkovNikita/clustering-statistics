@@ -9,6 +9,7 @@ import java.util.Map;
  * @author Никита
  */
 public class MacroClusteringStatistics implements Serializable {
+    private int id;
     private Timestamp timestamp;
     private int timeFactor;
     private int clusterId;
@@ -18,6 +19,14 @@ public class MacroClusteringStatistics implements Serializable {
     private int totalProcessedPerTimeUnit;
     private String mostRelevantTweetId;
     private int totalProcessedTweets;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public Timestamp getTimestamp() {
         return timestamp;
