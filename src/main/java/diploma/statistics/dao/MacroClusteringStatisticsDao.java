@@ -3,7 +3,6 @@ package diploma.statistics.dao;
 import diploma.statistics.GeneralStatistics;
 import diploma.statistics.MacroClusteringStatistics;
 import diploma.statistics.TimeAndProcessedPerUnit;
-import javafx.util.Pair;
 
 import java.sql.*;
 import java.util.*;
