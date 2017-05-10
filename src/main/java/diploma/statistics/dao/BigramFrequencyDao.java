@@ -18,8 +18,6 @@ public class BigramFrequencyDao extends BaseDao {
                 preparedStatement.setString(1, bigram);
                 preparedStatement.setInt(2, frequency);
                 preparedStatement.executeUpdate();
-                preparedStatement.close();
-                connection.close();
             } catch (Exception e) {
 //                e.printStackTrace();
                 throw e;
@@ -50,8 +48,6 @@ public class BigramFrequencyDao extends BaseDao {
                 preparedStatement.setInt(1, frequency);
                 preparedStatement.setString(2, bigram);
                 preparedStatement.executeUpdate();
-                preparedStatement.close();
-                connection.close();
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {

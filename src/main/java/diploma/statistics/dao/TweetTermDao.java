@@ -18,8 +18,6 @@ public class TweetTermDao extends BaseDao {
                 preparedStatement.setString(1, tweetId);
                 preparedStatement.setString(2, term);
                 preparedStatement.executeUpdate();
-                preparedStatement.close();
-                connection.close();
             } catch (Exception e) {
 //                e.printStackTrace();
                 throw e;

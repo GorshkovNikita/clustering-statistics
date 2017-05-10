@@ -10,7 +10,7 @@ import java.sql.SQLException;
  * @author Никита
  */
 public abstract class BaseDao {
-    public Connection getConnection() {
+    public synchronized Connection getConnection() {
         Connection connection;
         try {
             Class.forName(MysqlConfig.JDBC_DRIVER);

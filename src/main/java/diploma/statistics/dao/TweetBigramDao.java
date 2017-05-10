@@ -18,8 +18,6 @@ public class TweetBigramDao extends BaseDao {
                 preparedStatement.setString(1, tweetId);
                 preparedStatement.setString(2, bigram);
                 preparedStatement.executeUpdate();
-                preparedStatement.close();
-                connection.close();
             } catch (Exception e) {
 //                e.printStackTrace();
                 throw e;

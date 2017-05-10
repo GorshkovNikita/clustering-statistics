@@ -18,8 +18,6 @@ public class TermFrequencyDao extends BaseDao {
                 preparedStatement = connection.prepareStatement(insertTermFrequency);
                 preparedStatement.setString(1, term);
                 preparedStatement.setInt(2, frequency);
-                preparedStatement.executeUpdate();
-                preparedStatement.close();
                 connection.close();
             } catch (Exception e) {
 //                e.printStackTrace();
@@ -51,8 +49,6 @@ public class TermFrequencyDao extends BaseDao {
                 preparedStatement.setInt(1, frequency);
                 preparedStatement.setString(2, term);
                 preparedStatement.executeUpdate();
-                preparedStatement.close();
-                connection.close();
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {

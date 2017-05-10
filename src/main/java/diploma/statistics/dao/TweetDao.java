@@ -21,8 +21,6 @@ public class TweetDao extends BaseDao {
                 preparedStatement.setString(2, status.getText());
                 preparedStatement.setTimestamp(3, new Timestamp(new Date().getTime()));
                 preparedStatement.executeUpdate();
-                preparedStatement.close();
-                connection.close();
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
@@ -51,8 +49,6 @@ public class TweetDao extends BaseDao {
                 preparedStatement.setTimestamp(1, new Timestamp(new Date().getTime()));
                 preparedStatement.setString(2, String.valueOf(status.getId()));
                 preparedStatement.executeUpdate();
-                preparedStatement.close();
-                connection.close();
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {

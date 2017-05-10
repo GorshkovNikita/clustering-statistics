@@ -19,6 +19,7 @@ public class MacroClusteringStatistics implements Serializable {
     private int totalProcessedPerTimeUnit;
     private String mostRelevantTweetId;
     private int totalProcessedTweets;
+    private double rate;
 
     public int getId() {
         return id;
@@ -98,5 +99,13 @@ public class MacroClusteringStatistics implements Serializable {
 
     public void setTotalProcessedTweets(int totalProcessedTweets) {
         this.totalProcessedTweets = totalProcessedTweets;
+    }
+
+    public double getRate() {
+        return rate;
+    }
+
+    public void setRate(double rate) {
+        this.rate = rate;
     }
 }

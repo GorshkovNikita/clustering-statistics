@@ -16,7 +16,7 @@ public class RemovedMicroClusterDao extends BaseDao {
         if (connection != null) {
             PreparedStatement preparedStatement = null;
             try {
-                String insertRemovedStatistics = "INSERT INTO removedmicroclusters (clusterId, isPotential, topWords, numberOfDocuments, creationTime, lastUpdateTime) VALUES (?,?,?,?,?)";
+                String insertRemovedStatistics = "INSERT INTO removedmicroclusters (clusterId, isPotential, topWords, numberOfDocuments, creationTime, lastUpdateTime) VALUES (?,?,?,?,?,?)";
                 preparedStatement = connection.prepareStatement(insertRemovedStatistics);
                 preparedStatement.setInt(1, statistics.getClusterId());
                 preparedStatement.setByte(2, statistics.getIsPotential());
@@ -25,8 +25,6 @@ public class RemovedMicroClusterDao extends BaseDao {
                 preparedStatement.setTimestamp(5, new Timestamp(statistics.getCreationTime()));
                 preparedStatement.setTimestamp(6, new Timestamp(statistics.getLastUpdateTime()));
                 preparedStatement.executeUpdate();
-                preparedStatement.close();
-                connection.close();
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {

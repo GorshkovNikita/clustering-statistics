@@ -15,7 +15,7 @@ public class MacroClusteringStatisticsDao extends BaseDao {
         Connection connection = getConnection();
         PreparedStatement preparedStatement = null;
         String insertTweet = "INSERT INTO statistics (timestamp, clusterId, numberOfDocuments," +
-                " absorbedClusters, timeFactor, totalProcessedPerTimeUnit, mostRelevantTweetId, totalProcessedTweets) VALUES (?,?,?,?,?,?,?,?)";
+                " absorbedClusters, timeFactor, totalProcessedPerTimeUnit, mostRelevantTweetId, totalProcessedTweets, rate) VALUES (?,?,?,?,?,?,?,?,?)";
         if (connection != null) {
             try {
                 preparedStatement = connection.prepareStatement(insertTweet, Statement.RETURN_GENERATED_KEYS);
@@ -27,6 +27,7 @@ public class MacroClusteringStatisticsDao extends BaseDao {
                 preparedStatement.setInt(6, statistics.getTotalProcessedPerTimeUnit());
                 preparedStatement.setString(7, statistics.getMostRelevantTweetId());
                 preparedStatement.setInt(8, statistics.getTotalProcessedTweets());
+                preparedStatement.setDouble(9, statistics.getRate());
 
                 int affectedRows = preparedStatement.executeUpdate();
                 if (affectedRows == 0)
@@ -37,9 +38,6 @@ public class MacroClusteringStatisticsDao extends BaseDao {
                         saveTopTerms(generatedKeys.getLong(1), statistics.getTopTerms());
                     else throw new SQLException("Statistics insertion fails, no id obtained");
                 }
-
-                preparedStatement.close();
-                connection.close();
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
@@ -74,8 +72,6 @@ public class MacroClusteringStatisticsDao extends BaseDao {
                     preparedStatement.addBatch();
                 }
                 preparedStatement.executeBatch();
-                preparedStatement.close();
-                connection.close();
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
