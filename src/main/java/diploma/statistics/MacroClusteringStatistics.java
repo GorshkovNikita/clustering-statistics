@@ -20,6 +20,8 @@ public class MacroClusteringStatistics implements Serializable {
     private String mostRelevantTweetId;
     private int totalProcessedTweets;
     private double rate;
+    private int numberOfPotentialMicroClusters;
+    private int numberOfFiltered;
 
     public int getId() {
         return id;
@@ -107,5 +109,21 @@ public class MacroClusteringStatistics implements Serializable {
 
     public void setRate(double rate) {
         this.rate = rate;
+    }
+
+    public int getNumberOfPotentialMicroClusters() {
+        return numberOfPotentialMicroClusters;
+    }
+
+    public void setNumberOfPotentialMicroClusters(int numberOfPotentialMicroClusters) {
+        this.numberOfPotentialMicroClusters = numberOfPotentialMicroClusters;
+    }
+
+    public int getNumberOfFiltered() {
+        return numberOfFiltered;
+    }
+
+    public void setNumberOfFiltered(int numberOfFiltered) {
+        this.numberOfFiltered = numberOfFiltered;
     }
 }

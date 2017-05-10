@@ -15,7 +15,8 @@ public class MacroClusteringStatisticsDao extends BaseDao {
         Connection connection = getConnection();
         PreparedStatement preparedStatement = null;
         String insertTweet = "INSERT INTO statistics (timestamp, clusterId, numberOfDocuments," +
-                " absorbedClusters, timeFactor, totalProcessedPerTimeUnit, mostRelevantTweetId, totalProcessedTweets, rate) VALUES (?,?,?,?,?,?,?,?,?)";
+                " absorbedClusters, timeFactor, totalProcessedPerTimeUnit, mostRelevantTweetId, totalProcessedTweets, " +
+                "rate, numberOfPotentialMicroClusters, numberOfFiltered) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
         if (connection != null) {
             try {
                 preparedStatement = connection.prepareStatement(insertTweet, Statement.RETURN_GENERATED_KEYS);
@@ -28,7 +29,8 @@ public class MacroClusteringStatisticsDao extends BaseDao {
                 preparedStatement.setString(7, statistics.getMostRelevantTweetId());
                 preparedStatement.setInt(8, statistics.getTotalProcessedTweets());
                 preparedStatement.setDouble(9, statistics.getRate());
-
+                preparedStatement.setInt(10, statistics.getNumberOfPotentialMicroClusters());
+                preparedStatement.setInt(11, statistics.getNumberOfFiltered());
                 int affectedRows = preparedStatement.executeUpdate();
                 if (affectedRows == 0)
                     throw new SQLException("Statistics insertion fails, no rows affected.");

@@ -10,6 +10,7 @@ public class GeneralStatistics {
     private Timestamp endTime;
     private long duration;
     private int numberOfTweets;
+    private int numberOfClusters;
 
     public Timestamp getStartTime() {
         return startTime;
@@ -41,5 +42,13 @@ public class GeneralStatistics {
 
     public void setNumberOfTweets(int numberOfTweets) {
         this.numberOfTweets = numberOfTweets;
+    }
+
+    public int getNumberOfClusters() {
+        return numberOfClusters;
+    }
+
+    public void setNumberOfClusters(int numberOfClusters) {
+        this.numberOfClusters = numberOfClusters;
     }
 }

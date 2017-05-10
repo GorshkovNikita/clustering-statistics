@@ -58,4 +58,29 @@ public class PendingDao extends BaseDao implements Serializable {
         }
         return pendingMessages;
     }
+
+    public void saveNumberOfOutlierMicroClusters(int numberOfOutlierMicroClusters, int taskId) {
+        Connection connection = getConnection();
+        PreparedStatement statement = null;
+        try {
+            String query = "INSERT INTO outlierMicroClusters (numberOfOutlierMicroClusters, taskId, timestamp) VALUES (?,?,?)";
+            statement = connection.prepareStatement(query);
+            statement.setLong(1, numberOfOutlierMicroClusters);
+            statement.setLong(2, taskId);
+            statement.setTimestamp(3, new Timestamp(new Date().getTime()));
+            statement.executeUpdate();
+        }
+        catch (SQLException ignored) {}
+        finally {
+            try {
+                if (statement != null)
+                    statement.close();
+            }
+            catch (SQLException ignored) {}
+            try {
+                connection.close();
+            }
+            catch (SQLException ignored) {}
+        }
+    }
 }
