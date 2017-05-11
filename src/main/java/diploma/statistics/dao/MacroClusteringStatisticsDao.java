@@ -183,7 +183,7 @@ public class MacroClusteringStatisticsDao extends BaseDao {
         Map<String, Integer> topTerms = new HashMap<>();
         PreparedStatement stmt = null;
         try {
-            String query = "SELECT term, numberOfOccurrences FROM topTerms where statisticId = ?";
+            String query = "SELECT term, numberOfOccurrences FROM topterms where statisticId = ?";
             stmt =  connection.prepareStatement(query);
             stmt.setInt(1, statisticId);
             ResultSet resultSet = stmt.executeQuery();
